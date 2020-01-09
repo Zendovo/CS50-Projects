@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/filter",
-            "args": ["-b", "./images/yard.bmp", "./test.bmp"],
+            "args": ["-b", "./out.bmp", "./test.bmp"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
