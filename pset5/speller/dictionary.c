@@ -18,7 +18,7 @@ typedef struct node
 node;
 
 // Number of buckets in hash table
-const unsigned int N = 26;
+const unsigned int N = 26 * 26;
 
 // Hash table
 node *table[N];
@@ -58,7 +58,9 @@ bool check(const char *word)
 unsigned int hash(const char *word)
 {
     int i = word[0] - 97;
-    return i;
+    int j = word[0] - 97;
+    int index = 26 * i + j;
+    return index;
 }
 
 // Loads dictionary into memory, returning true if successful else false
