@@ -125,8 +125,6 @@ def index():
                     stock[key] = info[key]
                 starred_stocks.append(stock)
 
-        print(len(starred_stocks))
-
         return render_template("index.html", stocks=stocks, cash=rows[0]["cash"], total=total, starred_stocks=starred_stocks, str_stck_len=len(starred_stocks))
 
 
@@ -486,23 +484,18 @@ def check_complexity(password):
     while True:
         if len(password) < 8:
             n = -1
-            print("length")
             break
         elif not re.search("[a-z]", password):
             n = -1
-            print("letter", re.search("[a-z]", password))
             break
         elif not re.search("[A-Z]", password):
             n = -1
-            print("capital letter")
             break
         elif not re.search("[0-9]", password):
             n = -1
-            print("numbers")
             break
         elif not re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password):
             n = -1
-            print("symbols")
             break
         else:
             n = 0
