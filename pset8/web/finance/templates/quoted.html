@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ info["name"] }} ({{ info["symbol"] }})
+{% endblock %}
+
+{% block main %}
+    <div class="card card-body">
+        <h5 class="card-title">{{ info["name"] }} ({{ info["symbol"] }})</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ info["price"] | usd }}</h6>
+
+        <table class="table table-sm">
+            <tbody>
+                {% for key, value in info.items() %}
+                    <tr>
+                        {% if key in ["price", "previousClose", "marketCap", "week52High", "week52Low"] %}
+                            <th scope="row">{{ key | camelFormat }}</th>
+                            <td>{{ value | usd }}</td>
+                        {% elif key == "changePercent" %}
+                            <th scope="row">{{ key | camelFormat }}</th>
+                            {% if value < 0 %}
+                                <td><span class="badge badge-danger">{{ value }}%</span></td>
+                            {% else %}
+                            <td><span class="badge badge-success">{{ value }}%</span></td>
+                            {% endif %}
+                        {% else %}
+                            <th scope="row">{{ key | camelFormat }}</th>
+                            <td>{{ value }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+    </div>
+{% endblock %}

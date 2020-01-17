@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quote
+{% endblock %}
+
+{% block main %}
+    <form action="/quote" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="symbol" placeholder="Symbol" type="text">
+        </div>
+        <button type="submit" class="btn btn-primary m-button">
+            <div style="display:none;"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></div>
+            <span>Quote</span>
+        </button>
+    </form>
+
+    <script>
+
+        $(document).ready(function(){
+            $('.m-button').click(function() {
+                $('.m-button > div').css('display', 'inline');
+                $('.m-button > span').text("Requesting data...");
+            });
+        });
+    
+    </script>
+{% endblock %}
