@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Free Time Slots
+{% endblock %}
+
+{% block calc %}
+    active
+{% endblock %}
+
+{% block main %}
+
+    <h1>
+        Here are your free time slots!
+    </h1>
+
+    <ul class="list-group">
+        {% for timeSlot in timeSlots %}
+            <li class="list-group-item">
+                {{ timeSlot[0] }} TO {{ timeSlot[1] }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if not timeSlots %}
+        <p class="">
+            No free time slots of duration {{ duration }} minutes. :(
+        </p>
+    {% endif %}
+
+    <br>
+    <p>
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseAdvInfo" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Show advanced info
+        </a>
+    </p>
+
+    <div class="collapse" id="collapseAdvInfo">
+        <div class="card card-body">
+            <label for="mergedCode">Merged Schedule Code</label>
+            <input type="text" class="form-control border codes mx-auto" style="text-align: center;" id="mergedCode" value="{{ mergedCode }}">
+        </div>
+    </div>
+
+{% endblock %}

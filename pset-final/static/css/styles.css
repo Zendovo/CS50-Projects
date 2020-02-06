@@ -1,0 +1,79 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: 60%;
+}
+
+#duration
+{
+    /* override width */
+    width: 30%;
+
+}
+
+main
+{
+    /* center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+.btn-remove
+{
+    height: calc(1.5em + 1.5rem + 0px);
+    font-size: 0.875rem;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 2px;
+}
+
+.loading-container 
+{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0,0,0,.5);
+
+    z-index: -9999;
+    display: none;
+}
+
+#loading 
+{
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    margin-left: -50px;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.loading-container span
+{
+    margin-top: 70px;
+    transform: translate(-50%, -50%);
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: white;
+}

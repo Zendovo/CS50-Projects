@@ -58,6 +58,8 @@ if not os.environ.get("API_KEY"):
 def index():
     """Show portfolio of stocks"""
 
+    db = SQL("sqlite:///finance.db")
+
     user_id = session["user_id"]
 
     # Get username and current cash
@@ -132,6 +134,8 @@ def index():
 @login_required
 def buy():
     """Buy shares of stock"""
+
+    db = SQL("sqlite:///finance.db")
 
     if request.method == "POST":
 
@@ -210,6 +214,8 @@ def buy():
 def history():
     """Show history of transactions"""
 
+    db = SQL("sqlite:///finance.db")
+
     user_id = session["user_id"]
 
     rows = db.execute("SELECT username FROM users WHERE id=?", user_id)
@@ -222,6 +228,8 @@ def history():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
+
+    db = SQL("sqlite:///finance.db")
 
     # Forget any user_id
     session.clear()
@@ -261,6 +269,8 @@ def login():
 def logout():
     """Log user out"""
 
+    db = SQL("sqlite:///finance.db")
+
     # Forget any user_id
     session.clear()
 
@@ -272,6 +282,8 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
+
+    db = SQL("sqlite:///finance.db")
 
     if request.method == "POST":
 
@@ -296,6 +308,8 @@ def quote():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
+
+    db = SQL("sqlite:///finance.db")
 
     # User reached route via POST (that is by sumbitting the form)
     if request.method == "POST":
@@ -362,6 +376,8 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
+
+    db = SQL("sqlite:///finance.db")
 
     user_id = session["user_id"]
 
@@ -436,6 +452,8 @@ def sell():
 @login_required
 def change_pass():
     """ Changes User's Password """
+
+    db = SQL("sqlite:///finance.db")
 
     if request.method == "POST":
 
