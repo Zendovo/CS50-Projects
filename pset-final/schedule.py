@@ -12,10 +12,16 @@
 
 
 def mergeBounds(bounds1, bounds2):
-
+    """Returns the merged bounds of the schedules
+    
+    Arguments:
+        bounds1 {list} -- Time span of the schedule
+        bounds2 {list} -- Time span of the schedule
+    
+    Returns:
+        list -- Merged Time span
     """
-        Returns the merged bounds of the schedules
-    """
+    
 
     mergedBounds = []
 
@@ -35,9 +41,15 @@ def mergeBounds(bounds1, bounds2):
 
 
 def mergeSchedules(newBounds, sch1, sch2):
-
-    """
-        Merge the the schedules with the new bounds
+    """Merge the the schedules with the new bounds
+    
+    Arguments:
+        newBounds {list} -- The bounds (merged) of the schedules
+        sch1 {list} -- A list of time spans containing booked timings of schedule
+        sch2 {list} -- A list of time spans containing booked timings of schedule
+    
+    Returns:
+        list -- A list of time spans containing booked time slots of both schedules
     """
 
     mergedSch = []
@@ -147,9 +159,15 @@ def mergeSchedules(newBounds, sch1, sch2):
 
 
 def getFreeTimes(schedule, duration, bounds):
-
-    """
-    Returns the free time slots of duration in the the schedule
+    """Returns the free time slots of duration in the the schedule
+    
+    Arguments:
+        schedule {list} -- List of booked time spans
+        duration {int} -- Duration of free time slots (in minutes)
+        bounds {list} -- The bounds of the schedule
+    
+    Returns:
+        list -- List of free time slots
     """
 
     freeTimes = []
@@ -187,13 +205,19 @@ def getFreeTimes(schedule, duration, bounds):
 
 
 def compareTimes(t1, t2):
-
-    """
-    Compares times and returns -1, 0 or 1
+    """Compares times and returns -1, 0 or 1
     -1 : t1 < t2
      0 : t1 = t2
      1 : t1 > t2
+    
+    Arguments:
+        t1 {string} -- String in format HH:MM
+        t2 {string} -- String in format HH:MM
+    
+    Returns:
+        int -- Integer showing inequality or equality
     """
+    
 
     # Split the hour and the minute
     h1, m1 = t1.split(':')
@@ -213,10 +237,15 @@ def compareTimes(t1, t2):
 
 
 def diffBetweenTimes(t1, t2):
-
-    """
-    Returns the difference between times
+    """Returns the difference between times
     > t1 - t2
+    
+    Arguments:
+        t1 {string} -- String in format HH:MM
+        t2 {string} -- String in format HH:MM
+    
+    Returns:
+        int -- Difference between times (in minutes)
     """
 
     # Split the hour and the minute
