@@ -77,7 +77,9 @@
                 $('.meeting-' + current).slider("disable");
 
                 // Remove the remove-btn from the last meeting
-                $('.remove-' + current).remove()
+                animateCSS('.remove-' + current, 'fadeOut', () => {
+                    $('.remove-' + current).remove();
+                })
                 
             }
 
@@ -85,7 +87,7 @@
 
             var newSliderHTML = `<div class="animated bounceInLeft meeting-container-${current + 1}" id="time-range">
                                     <p>Meeting #${current + 1}: <span class="slider-time">9:00 AM</span> - <span class="slider-time2">5:00 PM</span>
-                                        <a onclick="removeMeeting()" class="ml-2 badge badge-danger remove-${current + 1}">Remove</a>
+                                        <button onclick="removeMeeting()" class="ml-2 btn btn-sm btn-danger remove-${current + 1}"> - </button>
                                     </p>
 
                                     <div class="sliders_step1">
@@ -161,7 +163,36 @@
         }
 
         function removeMeeting() {
-            
+
+            var current = parseInt($('#meetings_count').val());
+
+            const meeting =  document.querySelector('.meeting-container-' + current)
+            meeting.classList.add('animated', 'bounceOutLeft')
+
+            meeting.addEventListener('animationend', () => {
+
+                meeting.remove();
+                $('#meetings_count').val(current - 1);
+
+            })
+
+            var removeBtn = `<button onclick="removeMeeting()" class="ml-2 animated fadeIn btn btn-sm btn-danger remove-${current - 1}"> - </button>`
+
+            $(`.meeting-container-${current - 1} > p`).append(removeBtn)
+        }
+
+        function animateCSS(element, animationName, callback) {
+            const node = document.querySelector(element)
+            node.classList.add('animated', animationName)
+
+            function handleAnimationEnd() {
+                node.classList.remove('animated', animationName)
+                node.removeEventListener('animationend', handleAnimationEnd)
+
+                if (typeof callback === 'function') callback()
+            }
+
+            node.addEventListener('animationend', handleAnimationEnd)
         }
 
     </script>
