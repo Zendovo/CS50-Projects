@@ -75,13 +75,18 @@
                 max = end
 
                 $('.meeting-' + current).slider("disable");
+
+                // Remove the remove-btn from the last meeting
+                $('.remove-' + current).remove()
                 
             }
 
             $('#meetings_count').val(current + 1);
 
-            var newSliderHTML = `<div class="animated bounceInLeft" id="time-range">
-                                    <p>Meeting #${current + 1}: <span class="slider-time">9:00 AM</span> - <span class="slider-time2">5:00 PM</span></p>
+            var newSliderHTML = `<div class="animated bounceInLeft meeting-container-${current + 1}" id="time-range">
+                                    <p>Meeting #${current + 1}: <span class="slider-time">9:00 AM</span> - <span class="slider-time2">5:00 PM</span>
+                                        <a onclick="removeMeeting()" class="ml-2 badge badge-danger remove-${current + 1}">Remove</a>
+                                    </p>
 
                                     <div class="sliders_step1">
                                         <div class="slider-range meeting-${current + 1}"></div>
@@ -152,6 +157,10 @@
                     sliderTime.children[1].innerHTML = hours2 + ':' + (m2 < 10 && m2 !== 0 ? '0' + minutes2 : minutes2)
                 }
             });
+            
+        }
+
+        function removeMeeting() {
             
         }
 
