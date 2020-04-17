@@ -4,14 +4,21 @@
   "description": "Meeting Scheduler",
   "main": "app.js",
   "scripts": {
-    "start": "node app",
-    "dev": "nodemon app"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Himanshu Kumar",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
     "express": "^4.17.1",
-    "moment": "^2.24.0"
+    "express-handlebars": "^4.0.2",
+    "express-session": "^1.17.0",
+    "moment": "^2.24.0",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pg-promise": "^10.5.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
