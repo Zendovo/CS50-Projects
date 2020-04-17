@@ -4,12 +4,13 @@
 
 <h1 class="mt-5 text-center">Create your schedule here!</h1>
 
-<section class="flex-container schedule-create-container">
+<section class="container schedule-create-container">
 
-    <div class="bounds-container">
+    <div class="mt-4 flex-container bounds-container jumbotron">
 
         <h3 class="mt-4 text-center">Working Hours</h3>
-        <h7 class="text-center">The hours during which a meeting should be scheduled</h7><hr><br>
+        <p class="lead text-center">The hours during which a meeting should be scheduled</p>
+        <hr class="mb-5" width="100%">
 
         <div id="time-range">
             <p>Schedule Bounds: <span class="slider-time">9:00 AM</span> - <span class="slider-time2">5:00 PM</span></p>
@@ -21,27 +22,30 @@
 
     </div>
     
-    <div class="meetings-container">
+    <div class="flex-container meetings-container jumbotron">
 
-        <h3 class="mt-2 text-center">Meetings</h3>
-        <h7 class="text-center">Meetings to be added in chronological order</h7><hr><br>
+        <h3 class="mt-4 text-center">Meetings</h3>
+        <p class="lead text-center">Meetings to be added in chronological order</h7>
+        <hr class="mb-5" width="100%">
 
         <input type="number" id="meetings_count" value="0" hidden>
 
+        <div class="text-center">
+            <button class="btn btn-success add-meeting-btn" onclick="addMeeting()">+</button>
+            <button class="btn btn-primary" onclick="previewMeeting()">Done</button>
+        </div>
+
     </div>
 
-    <div>
-        <button class="btn btn-success" onclick="addMeeting()">+</button>
-        <button class="btn btn-primary" onclick="previewMeeting()">Done</button>
-    </div>
+    <div class="mt-5 jumbotron preview-container w-100" hidden>
 
-    <div class="preview container" hidden>
-
-        <div class="schedule-bar">
+        <h3 class="mt-4 mb-3 text-center">Preview</h3>
+        <hr class="mb-5" width="100%">
+        <div class="schedule-bar w-100" style="display: grid;">
 
         </div>
 
-        <form style="text-align: center;">
+        <form class="mt-5" style="text-align: center;">
             <input type="text" name="schedule" id="schedule" hidden>
             <button class="btn btn-success w-25" type="submit">Add</button>
         </form>
@@ -184,16 +188,88 @@
             const meeting =  document.querySelector('.meeting-container-' + current)
             meeting.classList.add('animated', 'bounceOutLeft')
 
+            $('.add-meeting-btn').prop('disabled', true)
+
             meeting.addEventListener('animationend', () => {
 
                 meeting.remove();
                 $('#meetings_count').val(current - 1);
+                $('.add-meeting-btn').prop('disabled', false)
 
             })
+
+            if (current - 1 === 0) {
+                $('.bounds-slider').slider('enable');
+            }
 
             var removeBtn = `<button onclick="removeMeeting()" class="ml-2 animated fadeIn btn btn-sm btn-danger remove-${current - 1}"> - </button>`
 
             $(`.meeting-container-${current - 1} > p`).append(removeBtn)
+            $('.meeting-' + (current-1)).slider('enable');
+
+        }
+
+        function previewMeeting() {
+            
+            var current = parseInt($('#meetings_count').val());
+
+            if (current === 0) return alert('You seem to have added no meetings!')
+            
+            const boundValues = $('.bounds-slider').slider('option', 'values')
+            var boundTimes = intToHnM(boundValues);
+            var bound_hours1 = boundTimes[0][0]
+            var bound_minutes1 = boundTimes[0][1]
+            var bound_hours2 = boundTimes[1][0]
+            var bound_minutes2 = boundTimes[1][1]
+
+            var bounds = [`${bound_hours1}:${bound_minutes1}`, `${bound_hours2}:${bound_minutes2}`]
+
+            var meetings = []
+            var schedule = [bounds, meetings]
+
+            for (let i = 1; i < current + 1; i++) {
+                
+                const values = $('.meeting-' + i).slider('option', 'values')
+                // console.log(values)
+
+                var array = intToHnM(values);
+                var hours1 = array[0][0]
+                var minutes1 = array[0][1]
+                var hours2 = array[1][0]
+                var minutes2 = array[1][1]
+
+                // console.log(hours1, minutes1)
+                // console.log(hours2, minutes2)
+
+                meetings.push([`${hours1}:${minutes1}`, `${hours2}:${minutes2}`])
+
+            }
+
+            $('#schedule').val(JSON.stringify(schedule))
+            progressBar()
+
+            $('.preview-container').prop('hidden', false)
+
+        }
+
+        function intToHnM(values) {
+
+            var hours1 = Math.floor(values[0] / 60);
+            var minutes1 = values[0] - (hours1 * 60);
+
+            if (hours1.length == 1) hours1 = '0' + hours1;
+            if (minutes1.length == 1) minutes1 = '0' + minutes1;
+            minutes1 = (minutes1 < 10 ? '0' + minutes1 : minutes1)
+
+            var hours2 = Math.floor(values[1] / 60);
+            var minutes2 = values[1] - (hours2 * 60);
+
+            if (hours2.length == 1) hours2 = '0' + hours2;
+            if (minutes2.length == 1) minutes2 = '0' + minutes2;
+            minutes2 = (minutes2 < 10 ? '0' + minutes2 : minutes2)
+
+            return [[hours1, minutes1], [hours2, minutes2]]
+            
         }
 
         function animateCSS(element, animationName, callback) {
@@ -214,32 +290,31 @@
 
     <script>
 
-        progressBar()
-
         function progressBar() {
 
-            var schedule = [['9:30', '13:30'], ['13:45', '15:00'], ['18:00', '18:30']]
-            var bounds = ['9:00', '19:00']
+            var schedule = JSON.parse($('#schedule').val())
+            var bounds = schedule[0]
+            var meetings = schedule[1]
 
             // var lengths = [bound2first, firstMeeting, first2second, secondMeeting, second2third, thirdMeeting, last2bound]
             var lengths = []
             var percentages = []
 
-            lengths.push(diffBetweenTimes(bounds[0], schedule[0][0]))
+            lengths.push(diffBetweenTimes(bounds[0], meetings[0][0]))
 
-            schedule.forEach((meeting, index) => {
+            meetings.forEach((meeting, index) => {
 
                 lengths.push(diffBetweenTimes(meeting[0], meeting[1]))
 
-                if (index === schedule.length - 1) {
+                if (index === meetings.length - 1) {
                     return;
                 }
 
-                lengths.push(diffBetweenTimes(meeting[1], schedule[index + 1][0]))
+                lengths.push(diffBetweenTimes(meeting[1], meetings[index + 1][0]))
                 
             });
 
-            lengths.push(diffBetweenTimes(bounds[1], schedule[schedule.length - 1][1]))
+            lengths.push(diffBetweenTimes(bounds[1], meetings[meetings.length - 1][1]))
 
             var totalTime = diffBetweenTimes(bounds[0], bounds[1])
             lengths.forEach(length => {
@@ -258,7 +333,7 @@
                 
             })
             
-            $('main').append(div)
+            $('.schedule-bar').html(div)
 
         }
 
