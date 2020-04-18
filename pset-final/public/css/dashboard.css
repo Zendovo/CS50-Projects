@@ -18,3 +18,11 @@
     
     background-color: #bbb4b459;
 }
+
+.progress-bar-orange {
+  background-color: orange !important;
+}
+
+.bg-custom-container {
+  background-color: #d6d6d621;
+}

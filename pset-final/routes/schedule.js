@@ -1,13 +1,51 @@
 const express = require('express');
 const { ensureAuthenticated } = require('../config/auth');
+const {pool} = require('../lib/Users');
 
 const router = express.Router();
 
-router.get('/create', ensureAuthenticated, (req, res) => {
+router.get('/create', (req, res) => {
 
-    res.render('create', {
-        name: req.user.name
-    });
+    if (req.isAuthenticated()) {
+        pool.query('SELECT count(schedule) FROM schedules WHERE email = $1;', [req.user.email], (err, result) => {
+
+            if (result.rows[0].count <= 7) {
+                res.render('create', {
+                    loggedIn: req.isAuthenticated()
+                });
+            } else {
+                req.flash('error_msg', 'You have maxed out your schedule capacity')
+                res.redirect('/dashboard')
+            }
+
+        })
+    } else {
+        res.render('create', {
+            loggedIn: req.isAuthenticated()
+        });
+    }
+
+});
+
+router.get('/add', ensureAuthenticated, (req, res) => {
+
+    pool.query('SELECT count(schedule) FROM schedules WHERE email = $1;', [req.user.email], (err, result) => {
+
+        if (result.rows[0].count <= 7) {
+            var schedule = req.query.schedule
+    
+            pool.query('INSERT INTO schedules (email, schedule) VALUES ($1, $2)', [req.user.email, schedule], (err, result) => {
+
+                // Log error later
+                res.redirect('/dashboard')
+
+            })
+        } else {
+            req.flash('error_msg', 'You have maxed out your schedule capacity')
+            res.redirect('/dashboard')
+        }
+
+    })
 
 });
 

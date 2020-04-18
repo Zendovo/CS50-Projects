@@ -45,10 +45,17 @@
 
         </div>
 
-        <form class="mt-5" method="post" style="text-align: center;">
-            <input type="text" name="schedule" id="schedule" hidden>
-            <button class="btn btn-success w-25" type="submit">Add</button>
-        </form>
+        <% if (loggedIn) { %>
+            <form method="get" action="/schedule/add" class="mt-5" style="text-align: center;">
+                <input type="text" name="schedule" id="schedule" hidden>
+                <button class="btn btn-success w-25" type="submit">Add</button>
+            </form>
+        <% } else { %>
+            <form class="mt-5" style="text-align: center;">
+                <h7>Your Schedule Code! (Copy it or Add it to your account)</h7>
+                <input type="text" style="text-align: center;" class="form-control" id="schedule" name="schedule" disabled>
+            </form>
+        <% } %>
 
     </div>
 

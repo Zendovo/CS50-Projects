@@ -3,7 +3,7 @@ var passwordValidator = require('password-validator');
 const {pool} = require('../lib/Users');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const uuidv4 = require('uuid/v4')
+const uuidv4 = require('uuid/v4');
 
 var schema = new passwordValidator();
 
