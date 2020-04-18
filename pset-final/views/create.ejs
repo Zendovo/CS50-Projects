@@ -328,7 +328,8 @@
                 if (index % 2 === 0) {
                     div.append(`<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: ${per}%"></div>`)
                 } else {
-                    div.append(`<div class="progress-bar progress-bar-striped" role="progressbar" style="width: ${per}%" aria-valuemin="0" aria-valuemax="100">${per}</div>`)
+                    var text = meetings[Math.floor(index / 2)][0] + ' - ' + meetings[Math.floor(index / 2)][1]
+                    div.append(`<div class="progress-bar progress-bar-striped" role="progressbar" style="width: ${per}%" aria-valuemin="0" aria-valuemax="100">${text}</div>`)
                 }
                 
             })
