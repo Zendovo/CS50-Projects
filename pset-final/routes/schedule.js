@@ -49,4 +49,25 @@ router.get('/add', ensureAuthenticated, (req, res) => {
 
 });
 
+router.post('/delete', ensureAuthenticated, (req, res) => {
+    
+    var id = req.body.id;
+    var email = req.user.email;
+
+    pool.query('DELETE FROM schedules WHERE id=$1 AND email=$2', [id, email], (err, result) => {
+
+        if (err) {
+            // Log error
+
+            req.flash('error_msg', 'Some error occurred! Try again or kindly report the issue to us.')
+            res.redirect('/dashboard')
+        }
+
+        console.log(result);
+        req.flash('success_msg', 'Successfully deleted schedule!')
+        res.redirect('/dashboard')
+    })
+
+})
+
 module.exports = router;

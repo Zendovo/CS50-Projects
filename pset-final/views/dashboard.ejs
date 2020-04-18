@@ -110,6 +110,7 @@
         }
 
     </script>
+    <script src="/js/helpers.js"></script>
 
     <div class="container mt-5">
         <% if (schedules) { %>
@@ -118,8 +119,11 @@
                 <h4>Schedule #<%= index + 1 %></h4>
                 <div class="pt-3 pb-3 pl-4 pr-4 mb-3 rounded bg-custom-container schedule-<%= index %>"></div>
                 <a class="btn btn-primary btn-sm" href="#" role="button">Plan a meeting</a>
-                <button class="btn btn-primary btn-sm" onclick="">Copy Code</button>
-                <a class="btn btn-danger btn-sm" href="#" role="button">Delete</a>
+                <button class="btn btn-primary btn-sm" onclick="copyToClipboard('<%= schedule.schedule %>')">Copy Code</button>
+                <form method="post" action="/schedule/delete" style="display: inline;">
+                    <input type="number" name="id" value="<%= schedule.id %>" hidden>
+                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                </form>
                 <script>
                     progressBar('<%- schedule.schedule %>', '.schedule-<%= index %>')
                 </script>
