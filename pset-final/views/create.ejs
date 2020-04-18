@@ -45,7 +45,7 @@
 
         </div>
 
-        <form class="mt-5" style="text-align: center;">
+        <form class="mt-5" method="post" style="text-align: center;">
             <input type="text" name="schedule" id="schedule" hidden>
             <button class="btn btn-success w-25" type="submit">Add</button>
         </form>
@@ -102,10 +102,16 @@
                 
             }
 
+            var array = intToHnM([min, max], true, false);
+            var hours1 = array[0][0]
+            var minutes1 = array[0][1]
+            var hours2 = array[1][0]
+            var minutes2 = array[1][1]
+
             $('#meetings_count').val(current + 1);
 
             var newSliderHTML = `<div class="animated bounceInLeft meeting-container-${current + 1}" id="time-range">
-                                    <p>Meeting #${current + 1}: <span class="slider-time">9:00 AM</span> - <span class="slider-time2">5:00 PM</span>
+                                    <p>Meeting #${current + 1}: <span class="slider-time">${hours1 + ':' + minutes1}</span> - <span class="slider-time2">${hours2 + ':' + minutes2}</span>
                                         <button onclick="removeMeeting()" class="ml-2 btn btn-sm btn-danger remove-${current + 1}"> - </button>
                                     </p>
 
@@ -252,7 +258,7 @@
 
         }
 
-        function intToHnM(values) {
+        function intToHnM(values, range = true, military = true) {
 
             var hours1 = Math.floor(values[0] / 60);
             var minutes1 = values[0] - (hours1 * 60);
@@ -260,6 +266,25 @@
             if (hours1.length == 1) hours1 = '0' + hours1;
             if (minutes1.length == 1) minutes1 = '0' + minutes1;
             minutes1 = (minutes1 < 10 ? '0' + minutes1 : minutes1)
+            if (!military) {
+                if (hours1 >= 12) {
+                    if (hours1 == 12) {
+                        hours1 = hours1;
+                        minutes1 = minutes1 + " PM";
+                    } else {
+                        hours1 = hours1 - 12;
+                        minutes1 = minutes1 + " PM";
+                    }
+                } else {
+                    hours1 = hours1;
+                    minutes1 = minutes1 + " AM";
+                }
+                if (hours1 == 0) {
+                    hours1 = 12;
+                    minutes1 = minutes1;
+                }
+            }
+            if (!range) return [hours1, minutes1];
 
             var hours2 = Math.floor(values[1] / 60);
             var minutes2 = values[1] - (hours2 * 60);
@@ -267,6 +292,23 @@
             if (hours2.length == 1) hours2 = '0' + hours2;
             if (minutes2.length == 1) minutes2 = '0' + minutes2;
             minutes2 = (minutes2 < 10 ? '0' + minutes2 : minutes2)
+            if (!military) {
+                if (hours2 >= 12) {
+                    if (hours2 == 12) {
+                        hours2 = hours2;
+                        minutes2 = minutes2 + " PM";
+                    } else if (hours2 == 24) {
+                        hours2 = 12;
+                        minutes2 = "00 AM";
+                    } else {
+                        hours2 = hours2 - 12;
+                        minutes2 = minutes2 + " PM";
+                    }
+                } else {
+                    hours2 = hours2;
+                    minutes2 = minutes2 + " AM";
+                }
+            }
 
             return [[hours1, minutes1], [hours2, minutes2]]
             
@@ -329,12 +371,14 @@
                     div.append(`<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: ${per}%"></div>`)
                 } else {
                     var text = meetings[Math.floor(index / 2)][0] + ' - ' + meetings[Math.floor(index / 2)][1]
-                    div.append(`<div class="progress-bar progress-bar-striped" role="progressbar" style="width: ${per}%" aria-valuemin="0" aria-valuemax="100">${text}</div>`)
+                    var altColor = (index % 4 === 1) ? 'bg-danger' : 'progress-bar-orange'
+                    div.append(`<div class="progress-bar progress-bar-striped ${altColor}" role="progressbar" style="width: ${per}%" data-toggle="tooltip" title="${text}" aria-valuemin="0" aria-valuemax="100"></div>`)
                 }
                 
             })
             
             $('.schedule-bar').html(div)
+            $('[data-toggle="tooltip"]').tooltip(); 
 
         }
 
@@ -423,8 +467,8 @@
                         hours2 = hours2;
                         minutes2 = minutes2 + " PM";
                     } else if (hours2 == 24) {
-                        hours2 = 11;
-                        minutes2 = "59 PM";
+                        hours2 = 12;
+                        minutes2 = "00 AM";
                     } else {
                         hours2 = hours2 - 12;
                         minutes2 = minutes2 + " PM";

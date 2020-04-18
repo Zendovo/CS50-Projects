@@ -122,6 +122,11 @@
   width: 90%;
   margin: 0 auto;
 }
+
 #time-range {
   width: 400px;
+}
+
+.progress-bar-orange {
+    background-color: orange !important;
 }
