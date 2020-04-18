@@ -53,6 +53,7 @@ app.use('/', require('./routes/index'));
 app.use('/', require('./routes/users'));
 app.use('/dashboard', require('./routes/dashboard'));
 app.use('/schedule', require('./routes/schedule'));
+app.use('/api/getAvailTime', require('./routes/api/getAvailTime'))
 
 
 const PORT = process.env.PORT || 5000;
