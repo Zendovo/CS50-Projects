@@ -54,6 +54,7 @@ app.use('/', require('./routes/users'));
 app.use('/dashboard', require('./routes/dashboard'));
 app.use('/schedule', require('./routes/schedule'));
 app.use('/api/getAvailTime', require('./routes/api/getAvailTime'))
+app.use('/friends', require('./routes/friends'));
 
 
 const PORT = process.env.PORT || 5000;

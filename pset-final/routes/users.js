@@ -79,8 +79,26 @@ router.post('/register', (req, res) => {
                                 if (err) throw err;
 
                                 console.log(result)
-                                req.flash('success_msg', 'You are now registered! Try logging in!')
-                                res.redirect('/login')
+
+                                var regenCode = code => {
+
+                                    pool.query('UPDATE friend_request_code SET code=$1 WHERE user_id=$2', [code, req.user.id], (err, result) => {
+                                        
+                                        if (err !== undefined) {
+                                            if(err.code === '23505' && err.contraint === 'friend_request_code_code_key') {
+                                                regenCode(randomString(6))
+                                                return
+                                            }
+                                        }
+                            
+                                        // Log error
+                            
+                                        req.flash('success_msg', 'You are now registered! Try logging in!')
+                                        res.redirect('/login')
+                            
+                                    })
+                                }
+                                regenCode(randomString(6))
                             })
                         })
                     })
@@ -128,5 +146,9 @@ router.get('/logout', (req, res) => {
     req.flash('success_msg', 'You are logged out!');
     res.redirect('/login');
 })
+
+function randomString(length) {
+    return Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+}
 
 module.exports = router;

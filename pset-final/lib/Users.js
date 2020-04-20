@@ -21,6 +21,10 @@ function createTable() {
         time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT users_pkey PRIMARY KEY(id) )
         WITH (oids = false);`);
+
+    pool.query(`CREATE TABLE IF NOT EXISTS friend_request_code (                                                                    
+        user_id UUID NOT NULL PRIMARY KEY,
+        code CHAR(6) UNIQUE NOT NULL );`);
 }
 
 module.exports = {
