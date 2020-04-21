@@ -194,8 +194,6 @@ module.exports = {
 
         var endBound = bounds[1];
 
-        console.log(schedule[schLen - 1][1]);
-
         // Check if there are any free time slots between the bound and last entry
         if (module.exports.diffBetweenTimes(endBound, schedule[schLen - 1][1]) >= duration) {
             var timeSlot = [schedule[schLen - 1][1], endBound];

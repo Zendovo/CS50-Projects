@@ -1,0 +1,39 @@
+<h1 class="mt-5 text-center">
+    Enter the time slot codes below!
+</h1>
+
+<%- include ("./partials/messages") %>
+
+<form class="mt-5 text-center w-75" style="margin: auto;" action="/plan/codes" method="POST">
+
+    <div class="form-group">
+        <button type="button" class="btn btn-info addField">+</button>
+    </div>
+
+    <div class="form-group" id="codes">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control border codes" id="code_1" name="code_1" placeholder="Enter code..." required>
+            <div class="input-group-append">
+                <button type="button" class="btn btn-danger btn-remove" onclick="shake(this)" style="opacity: 0.65;">-</button><br>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control border codes" id="code_2" name="code_2" placeholder="Enter code..." required>
+            <div class="input-group-append">
+                <button type="button" class="btn btn-danger btn-remove" onclick="shake(this)" style="opacity: 0.65;">-</button><br>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group w-25" style="margin: auto;">
+        <input type="number" class="form-control border" name="duration" id="duration" placeholder="Duration" required>
+    </div>
+    
+    <!--Storing number of fields-->
+    <input type="number" name="count" id="count" value="2"  autocomplete="off" hidden>
+    
+    <button type="submit" id="submit" class="mt-5 btn btn-primary">Calculate</button>
+    
+</form>
+
+<script src="/js/dynamicFields.js"></script>

@@ -375,7 +375,25 @@
             percentages.forEach((per, index) => {
                 
                 if (index % 2 === 0) {
-                    div.append(`<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: ${per}%"></div>`)
+                    if (index === 0) {
+
+                        var meetingEnd = bounds[0];
+                        var next_meetingStart = meetings[0][0]
+
+                    } else if (index < percentages.length - 1) {
+
+                        var meetingEnd = meetings[index / 2 - 1][1];
+                        var next_meetingStart = meetings[index / 2][0];
+
+                    } else if (index === percentages.length - 1) {
+
+                        var meetingEnd = meetings[index / 2 - 1][1];
+                        var next_meetingStart = bounds[1];
+
+                    }
+
+                    var text = meetingEnd + ' - ' + next_meetingStart;
+                    div.append(`<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: ${per}%" data-toggle="tooltip" title="${text}" aria-valuemin="0" aria-valuemax="100"></div>`)
                 } else {
                     var text = meetings[Math.floor(index / 2)][0] + ' - ' + meetings[Math.floor(index / 2)][1]
                     var altColor = (index % 4 === 1) ? 'bg-danger' : 'progress-bar-orange'

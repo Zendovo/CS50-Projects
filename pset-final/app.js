@@ -7,7 +7,6 @@ const session = require('express-session');
 const passport = require('passport');
 
 const logger = require('./middleware/logger');
-const scheduler = require('./lib/scheduler');
 
 const app = express();
 
@@ -53,8 +52,8 @@ app.use('/', require('./routes/index'));
 app.use('/', require('./routes/users'));
 app.use('/dashboard', require('./routes/dashboard'));
 app.use('/schedule', require('./routes/schedule'));
-app.use('/api/getAvailTime', require('./routes/api/getAvailTime'))
 app.use('/friends', require('./routes/friends'));
+app.use('/plan', require('./routes/plan'));
 
 
 const PORT = process.env.PORT || 5000;
