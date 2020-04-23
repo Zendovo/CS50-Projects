@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/create', (req, res) => {
 
     if (req.isAuthenticated()) {
-        pool.query('SELECT count(schedule) FROM schedules WHERE email = $1;', [req.user.email], (err, result) => {
+        pool.query('SELECT count(schedule) FROM schedules WHERE user_id = $1;', [req.user.id], (err, result) => {
 
             if (result.rows[0].count <= 7) {
                 res.render('create', {
@@ -29,12 +29,12 @@ router.get('/create', (req, res) => {
 
 router.get('/add', ensureAuthenticated, (req, res) => {
 
-    pool.query('SELECT count(schedule) FROM schedules WHERE email = $1;', [req.user.email], (err, result) => {
+    pool.query('SELECT count(schedule) FROM schedules WHERE user_id = $1;', [req.user.id], (err, result) => {
 
         if (result.rows[0].count <= 7) {
             var schedule = req.query.schedule
     
-            pool.query('INSERT INTO schedules (email, schedule) VALUES ($1, $2)', [req.user.email, schedule], (err, result) => {
+            pool.query('INSERT INTO schedules (user_id, schedule) VALUES ($1, $2)', [req.user.id, schedule], (err, result) => {
 
                 // Log error later
                 res.redirect('/dashboard')
@@ -52,9 +52,9 @@ router.get('/add', ensureAuthenticated, (req, res) => {
 router.post('/delete', ensureAuthenticated, (req, res) => {
     
     var id = req.body.id;
-    var email = req.user.email;
+    var userId = req.user.id;
 
-    pool.query('DELETE FROM schedules WHERE id=$1 AND email=$2', [id, email], (err, result) => {
+    pool.query('DELETE FROM schedules WHERE id=$1 AND user_id=$2', [id, userId], (err, result) => {
 
         if (err) {
             // Log error

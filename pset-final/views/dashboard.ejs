@@ -58,7 +58,7 @@
             var div = $('<div>', {class: 'progress w-100'}).css('margin', 'auto')
 
             var startToBound = (diffBetweenTimes(bounds[0], '00:00') / totalTime) * 100
-            div.append(`<div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: ${startToBound}%"></div>`)
+            div.append(`<div class="progress-bar progress-bar-striped progress-bar-lightgray" role="progressbar" style="width: ${startToBound}%"></div>`)
             
             percentages.forEach((per, index) => {
                 
@@ -85,14 +85,14 @@
                     div.append(`<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: ${per}%" data-toggle="tooltip" title="${text}" aria-valuemin="0" aria-valuemax="100"></div>`)
                 } else {
                     var text = meetings[Math.floor(index / 2)][0] + ' - ' + meetings[Math.floor(index / 2)][1]
-                    var altColor = (index % 4 === 1) ? 'bg-danger' : 'progress-bar-orange'
+                    var altColor = (index % 4 === 1) ? 'progress-bar-gray' : 'progress-bar-gray2'
                     div.append(`<div class="progress-bar progress-bar-striped ${altColor}" role="progressbar" style="width: ${per}%" data-toggle="tooltip" title="${text}" aria-valuemin="0" aria-valuemax="100"></div>`)
                 }
                 
             })
 
             var boundToEnd = (diffBetweenTimes(bounds[1], '24:00') / totalTime) * 100
-            div.append(`<div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: ${boundToEnd}%"></div>`)
+            div.append(`<div class="progress-bar progress-bar-striped progress-bar-lightgray" role="progressbar" style="width: ${boundToEnd}%"></div>`)
             
             var timestamp = $(`<div class="row justify-content-between text-center">
                                 <div class="col">0</div>
@@ -166,7 +166,7 @@
                     </h4>
                 </form>
                 <div class="pt-3 pb-3 pl-4 pr-4 mb-3 rounded bg-custom-container schedule-<%= index %>"></div>
-                <a class="btn btn-primary btn-sm" href="#" role="button">Plan a meeting</a>
+                <a class="btn btn-primary btn-sm" href="/plan/<%= schedule.id %>" role="button">Plan a meeting</a>
                 <button class="btn btn-primary btn-sm" onclick="copyToClipboard('<%= schedule.schedule %>')">Copy Code</button>
                 <form method="post" action="/schedule/delete" style="display: inline;">
                     <input type="number" name="id" value="<%= schedule.id %>" hidden>
@@ -174,7 +174,7 @@
                 </form>
                 <script>
                     progressBar('<%- schedule.schedule %>', '.schedule-<%= index %>')
-                    </script>
+                </script>
             </div>
         <% }) %>
         <% } %>

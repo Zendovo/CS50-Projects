@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', ensureAuthenticated, (req, res) => {
 
-    pool.query('SELECT id, schedule, name FROM schedules WHERE email=$1', [req.user.email], (err, result) => {
+    pool.query('SELECT id, schedule, name FROM schedules WHERE user_id=$1', [req.user.id], (err, result) => {
 
         res.render('dashboard', {
             name: req.user.name,
@@ -21,7 +21,7 @@ router.post('/:id', ensureAuthenticated, (req, res) => {
 
     var id = req.params.id;
 
-    pool.query('SELECT id FROM schedules WHERE id=$1 AND email=$2', [id, req.user.email], (err, result) => {
+    pool.query('SELECT id FROM schedules WHERE id=$1 AND user_id=$2', [id, req.user.id], (err, result) => {
 
         if (result.rowCount > 0) {
         

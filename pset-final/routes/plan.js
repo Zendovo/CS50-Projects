@@ -1,16 +1,35 @@
 const express = require('express');
 const { ensureAuthenticated } = require('../config/auth');
-const getAvailTime = require('../lib/getAvailTime')
+const getAvailTime = require('../lib/getAvailTime');
+const {pool} = require('../lib/Users');
 
 const router = express.Router();
 
-router.get('/', ensureAuthenticated, (req, res) => {
+router.get('/:id', ensureAuthenticated, (req, res) => {
 
-    if (req.isAuthenticated()) {
+    var id = req.params.id;
 
-    } else {
-        res.render('codes')
-    }
+    pool.query('SELECT id FROM schedules WHERE id=$1 AND user_id=$2', [id, req.user.id], (err, result) => {
+
+        if (result.rowCount > 0) {
+        
+            pool.query('SELECT id, user_id, friend_id FROM friends WHERE user_id=$1', [req.user.id], (err, result1) => {
+                
+                req.flash('success_msg', 'Changed name successfully!')
+                res.redirect('/dashboard')
+            })
+
+        } else {
+
+            req.flash('error_msg', 'Error occurred, please try again!')
+            res.redirect('/dashboard')
+        }
+
+    })
+
+    res.render('plan', {
+        
+    })
 
 });
 
