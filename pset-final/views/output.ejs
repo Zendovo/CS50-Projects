@@ -137,17 +137,17 @@
 
 </script>
 
-<h1>Your free time slots</h1>
+<h1 class="text-center">Your free time slots</h1>
 
-<div class="jumbotron">
+<div class="jumbotron w-75 mt-4" style="margin: auto;">
 
     <p class="text-muted">The green parts are your time slots</p>
 
-    <div class="bar-container">
+    <div class="bar-container mt-5">
         
     </div>
 
-    <ul class="list-group">
+    <ul class="list-group mt-5 w-50" style="margin: auto;">
         <% freeSlots.forEach((freeSlot, index) => { %>
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <%= freeSlot[0] %> - <%= freeSlot[1] %>
