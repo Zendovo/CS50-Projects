@@ -155,7 +155,16 @@
         <% if (schedules) { %>
         <% schedules.forEach((schedule, index) => { %>
             <div class="jumbotron mt-5 schedule-<%= index %>-container">
-                <h4>Schedule #<%= index + 1 %></h4>
+                <form class="schedule-name-container-<%= index + 1 %>" action="/dashboard/<%= schedule.id %>" method="POST">
+                    <h4 class="schedule-name-<%= index + 1 %>">
+                        <% if (schedule.name) { %>
+                            <%= schedule.name %>
+                        <% } else { %>
+                            Schedule #<%= index + 1 %>
+                        <% } %>
+                        <button class="btn-sm btn btn-primary" type="button" onclick="editName('<%= index + 1 %>')"><i class="far fa-edit"></i></button>
+                    </h4>
+                </form>
                 <div class="pt-3 pb-3 pl-4 pr-4 mb-3 rounded bg-custom-container schedule-<%= index %>"></div>
                 <a class="btn btn-primary btn-sm" href="#" role="button">Plan a meeting</a>
                 <button class="btn btn-primary btn-sm" onclick="copyToClipboard('<%= schedule.schedule %>')">Copy Code</button>
@@ -165,10 +174,48 @@
                 </form>
                 <script>
                     progressBar('<%- schedule.schedule %>', '.schedule-<%= index %>')
-                </script>
+                    </script>
             </div>
         <% }) %>
         <% } %>
     </div>
+
+    <script>
+
+        function editName(index) {
+
+            var heading = $('.schedule-name-' + index)
+            var oldName = $.trim(heading.text());
+            var container = $('.schedule-name-container-' + index)
+            var button = $('.schedule-name-container-' + index + ' > button')
+
+            var input = $(`<div class="input-group mb-3">
+                            <input type="text" class="form-control bg-secondary" name="name" placeholder="New name..." id="" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="button" onclick="cancelEdit(${index}, '${oldName}')" id="button-addon2">Cancel</button>
+                                <button class="btn btn-primary" type="submit" id="button-addon2">Confirm</button>
+                            </div>
+                        </div>
+                            `)
+
+            heading.remove();
+            button.remove();
+            container.append(input);
+            
+        }
+
+        function cancelEdit(index, oldName) {
+
+            var container = $('.schedule-name-container-' + index)
+            var name = `<h4 class="schedule-name-${index}">
+                            ${oldName}
+                            <button class="btn-sm btn btn-primary" type="button" onclick="editName('${index}')"><i class="far fa-edit"></i></button>
+                        </h4>`
+
+            container.html(name)
+            
+        }
+
+    </script>
 
 </section>
