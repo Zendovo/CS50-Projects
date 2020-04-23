@@ -65,7 +65,8 @@ router.post('/register', (req, res) => {
                     res.render('register', { errors, name, email, password, password2 })
 
                 } else {
-                    let values = [uuidv4(), name, email]
+                    let uuid = uuidv4()
+                    let values = [uuid, name, email]
 
                     // generate salt and hash the password
                     bcrypt.genSalt(10, (err, salt) => {
@@ -82,7 +83,7 @@ router.post('/register', (req, res) => {
 
                                 var regenCode = code => {
 
-                                    pool.query('UPDATE friend_request_code SET code=$1 WHERE user_id=$2', [code, req.user.id], (err, result) => {
+                                    pool.query('INSERT INTO friend_request_code (user_id, code) VALUES ($2, $1)', [code, uuid], (err, result) => {
                                         
                                         if (err !== undefined) {
                                             if(err.code === '23505' && err.contraint === 'friend_request_code_code_key') {
