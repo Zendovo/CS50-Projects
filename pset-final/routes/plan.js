@@ -16,9 +16,6 @@ router.get('/:id', ensureAuthenticated, (req, res) => {
             pool.query('SELECT friends.friend_id, users.name as friend_name, users.email FROM friends INNER JOIN users ON users.id = friends.friend_id WHERE friends.user_id=$1;', [req.user.id], (err, result1) => {
 
                 var friends = groupBy('friend_id', result1.rows)
-                friends.forEach((friend, index) => {
-                    console.log(friend.items)
-                })
                 
                 res.render('plan', {
                     friends,
@@ -56,13 +53,48 @@ router.post('/:id/sch', ensureAuthenticated, async (req, res) => {
         
         res.render('plan_selectSch', {
             friends,
-            id: req.params.id
+            id: req.params.id,
+            peopleCount: friends.length
         })
     })
 
 });
 
-router.post('/')
+router.post('/:id/out', ensureAuthenticated, async (req, res) => {
+
+    var schedules = [];
+    var duration = req.body.duration;
+    var peopleCount = parseInt(req.body.peopleCount);
+
+    for (let i = 0; i < peopleCount; i++) {
+        
+        try {
+            var sch = JSON.parse(req.body[i])
+        } catch (error) {
+            req.flash('error_msg', 'Invalid Code.')
+            res.redirect('/dashboard')
+        }
+        
+        schedules.push(sch);
+    }
+
+    console.log(1)
+    
+    var obj = getAvailTime(schedules, duration)
+
+    if (obj.msg === 'ERROR') {
+        req.flash('error_msg', 'Invalid Code.')
+        res.redirect('/dashboard')
+        return
+    }
+
+    res.render('output', {
+        schedule: JSON.stringify(obj.schedule),
+        freeSlots: obj.freeSlots,
+        duration
+    })    
+
+});
 
 router.get('/codes', (req, res) => {
 
