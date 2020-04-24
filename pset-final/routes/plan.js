@@ -77,8 +77,6 @@ router.post('/:id/out', ensureAuthenticated, async (req, res) => {
         
         schedules.push(sch);
     }
-
-    console.log(1)
     
     var obj = getAvailTime(schedules, duration)
 

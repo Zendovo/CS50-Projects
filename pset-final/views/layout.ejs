@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://kit.fontawesome.com/2747dc7aa7.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/layout.css">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/lux/bootstrap.min.css">
@@ -53,15 +54,52 @@
 
     <script src="/js/helpers.js"></script>
 
-    <main class="mt-4">
+    <main class="mt-4 mb-5">
         
         <%- body %>
 
     </main>
 
-    <footer>
+    <!-- Site footer -->
+    <footer class="site-footer">
+        <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-8 text-center">
+            <h6>About</h6>
+            <p class="text-center">Scheduler <i>MEETINGS MADE SIMPLE </i> is a simple web application that can help users get ahead of their busy schedules to plan meetings. In this busy world it can be hard to keep up, Scheduler aims to make that proccess simple, even if by a little. This project was created and developed by Himanshu Kumar (psuedonym Zendovo).</p>
+            </div>
 
-    </footer>
+            <div class="col-xs-6 col-md-4 text-center">
+            <h6>Quick Links</h6>
+            <ul class="footer-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+            </ul>
+            </div>
+        </div>
+        <hr>
+        </div>
+        <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+            <!-- <p class="copyright-text">Copyright &copy; 2020 All Rights Reserved by 
+        <a href="#">Himanshu Kumar</a>.
+            </p> -->
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+            <ul class="social-icons">
+                <!-- <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li> -->
+                <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+                <li><a class="instagram" href="#"><i class="fa fa-instagram"></i></a></li>
+                <li><a class="youtube" href="#"><i class="fa fa-youtube"></i></a></li>
+            </ul>
+            </div>
+        </div>
+        </div>
+</footer>
     
 </body>
 </html>
