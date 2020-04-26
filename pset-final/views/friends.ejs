@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/css/friends.css">
+
 <%- include ("./partials/messages") %>
 <h1 class="mt-5 text-center display-4">Friends</h1>
 
@@ -39,9 +41,14 @@
     <h2 class="text-center">Your Friends</h2>
     <% if (friends) { %>
 
+        <div class="mt-5 wrapper">
         <% friends.forEach((friend, index) => { %>
-            
+            <div class="box">
+                <h4><%= friend.name %></h4>
+                <h6 style="color: #333333;"><%= friend.email %></h6>
+            </div>
         <% }) %>
+        </div>
 
     <% } %>
 </div>
@@ -57,7 +64,7 @@
                             <div class="toast-header">
                                 
                                 <strong class="mr-auto">Friend Request</strong>
-                                <small class="text-muted">${timeSince('<%= requests.date_part %>')}></small>
+                                <small class="text-muted">${timeSince('<%= requests.date_part %>')} ago</small>
                                 <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                                 </button>
@@ -65,19 +72,29 @@
                             <div class="toast-body">
                                 <span class="text-muted">Friend request from</span> <%= requests.name %><br>
                                 <div class="mt-2">
-                                    <button type="button" class="ml-2 mb-1 btn-sm btn btn-primary" style="width: 45%;" data-dismiss="toast" aria-label="Close">Accept</button>
-                                    <button type="button" class="ml-2 mb-1 btn-sm btn btn-secondary" style="width: 45%;" data-dismiss="toast" aria-label="Close">Ignore</button>
+                                    <form method="POST" action="/friends/acceptrequest" style="display: inline;">
+                                        <input value="<%= requests.sender_id %>" name="sender" hidden></input>
+                                        <button type="submit" class="ml-2 mb-1 btn-sm btn btn-primary" style="width: 45%;" data-dismiss="toast" aria-label="Accept">Accept</button>
+                                    </form>
+                                    <form method="POST" action="/friends/deleterequest" style="display: inline;">
+                                        <input value="<%= requests.sender_id %>" name="sender" hidden></input>
+                                        <button type="submit" class="ml-2 mb-1 btn-sm btn btn-secondary" style="width: 45%;" data-dismiss="toast" aria-label="Remove">Remove</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>`
 
+            console.log(timeSince('<%= requests.date_part %>'))
             $('.toasts').append(toast)
             $('.toast').toast('show')
-            console.log('<%= requests.date_part %>')
         
         // <% }) %>
 
     // <% } %>
+
+    function name(params) {
+        
+    }
 
     function timeSince(date) {
 

@@ -9,10 +9,10 @@ router.get('/', ensureAuthenticated, (req, res) => {
     pool.query('SELECT code FROM friend_request_code WHERE user_id=$1', [req.user.id], (err, codes) => {
         
     pool.query('SELECT users.name, friend_requests.sender_id, CAST(EXTRACT(epoch FROM friend_requests.timestamp) AS BIGINT), friend_requests.receiver_id FROM friend_requests INNER JOIN users ON friend_requests.sender_id=users.id WHERE receiver_id=$1', [req.user.id], (err, requests) => {
-    console.log(err)
-    pool.query('SELECT * FROM friends WHERE user_id=$1', [req.user.id], (err, friends) => {
+    
+    pool.query('SELECT friends.id, friends.friend_id, users.name, users.email FROM friends INNER JOIN users ON friends.friend_id=users.id WHERE user_id=$1', [req.user.id], (err, friends) => {
 
-        console.log(requests)
+        console.log(requests.rows)
         
         res.render('friends', {
             friendRequestCode: codes.rows[0].code,
@@ -105,25 +105,65 @@ router.post('/sendrequest', ensureAuthenticated, (req, res) => {
 
 })
 
+router.post('/acceptrequest', ensureAuthenticated, (req, res) => {
+
+    pool.query('SELECT count(*) FROM friend_requests WHERE sender_id=$1 AND receiver_id=$2', [req.body.sender, req.user.id], (err, result) => {
+
+        // Log error
+        if (err) {
+            req.flash('error_msg', 'Some error occurred.');
+            return res.redirect('/friends');
+        }
+
+        addFriend(req.body.sender, req.user.id);
+
+    })
+
+});
+
+router.post('/deleterequest', ensureAuthenticated, (req, res) => {
+
+    var result = deleteRequest(req.body.sender, req.user.id);
+
+    if (result === undefined) {
+        req.flash('error_msg', 'Some error occurred.');
+        return res.redirect('/friends');
+    }
+
+    req.flash('success_msg', 'Friend request deleted.');
+    res.redirect('/friends');
+
+});
+
 function addFriend(user1, user2) {
 
     pool.query('INSERT INTO friends (user_id, friend_id) VALUES ($1, $2)', [user1, user2], (err, result) => {
 
         // Log error
 
-        if (err) throw err;
+        // if (err) throw err;
+        if (err) return err;
     })
 
     pool.query('INSERT INTO friends (user_id, friend_id) VALUES ($1, $2)', [user2, user1], (err, result) => {
         
         // Log error
         
-        if (err) throw err;
+        // if (err) throw err;
+        if (err) return err;
     })
+
+    deleteRequest(user1, user2)
+    
+}
+
+function deleteRequest(user1, user2) {
 
     pool.query('DELETE FROM friend_requests WHERE (sender_id=$1 AND receiver_id=$2) OR (sender_id=$2 AND receiver_id=$1)', [user1, user2], (err, result) => {
 
-        if (err) throw err;
+        // if (err) throw err;
+
+        return result;
     })
     
 }

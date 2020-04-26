@@ -19,10 +19,18 @@ const router = express.Router()
 
 router.get('/login', (req, res) => {
 
+    if (req.isAuthenticated()) {
+        return res.redirect('/dashboard')
+    }
+
     res.render('login')
 });
 
 router.get('/register', (req, res) => {
+
+    if (req.isAuthenticated()) {
+        return res.redirect('/dashboard')
+    }
 
     res.render('register')
 });
