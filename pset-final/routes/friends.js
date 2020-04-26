@@ -133,6 +133,8 @@ router.post('/acceptrequest', ensureAuthenticated, (req, res) => {
         }
 
         addFriend(req.body.sender, req.user.id);
+        req.flash('success_msg', 'Friend Request Accepted!');
+        return res.redirect('/friends');
 
     })
 
