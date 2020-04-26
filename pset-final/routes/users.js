@@ -23,7 +23,9 @@ router.get('/login', (req, res) => {
         return res.redirect('/dashboard')
     }
 
-    res.render('login')
+    res.render('login', {
+        loggedIn: req.isAuthenticated()
+    })
 });
 
 router.get('/register', (req, res) => {
@@ -32,7 +34,9 @@ router.get('/register', (req, res) => {
         return res.redirect('/dashboard')
     }
 
-    res.render('register')
+    res.render('register', {
+        loggedIn: req.isAuthenticated()
+    })
 });
 
 router.post('/register', (req, res) => {
@@ -57,7 +61,7 @@ router.post('/register', (req, res) => {
     }
 
     if (errors.length > 0) {
-        res.render('register', { errors, name, email, password, password2 })
+        res.render('register', { errors, name, email, password, password2, loggedIn: req.isAuthenticated() })
     } else {
 
         // Validation passed
@@ -70,7 +74,7 @@ router.post('/register', (req, res) => {
 
                     // Email already exists
                     errors.push({ msg: 'Email is already registered. Try logging in instead.' })
-                    res.render('register', { errors, name, email, password, password2 })
+                    res.render('register', { errors, name, email, password, password2, loggedIn: req.isAuthenticated() })
 
                 } else {
                     let uuid = uuidv4()

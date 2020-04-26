@@ -17,7 +17,8 @@ router.get('/', ensureAuthenticated, (req, res) => {
         res.render('friends', {
             friendRequestCode: codes.rows[0].code,
             friendRequests: requests.rows,
-            friends: friends.rows
+            friends: friends.rows,
+            loggedIn: req.isAuthenticated()
         })
 
     })

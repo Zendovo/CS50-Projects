@@ -10,7 +10,8 @@ router.get('/', ensureAuthenticated, (req, res) => {
 
         res.render('dashboard', {
             name: req.user.name,
-            schedules: result.rows
+            schedules: result.rows,
+            loggedIn: req.isAuthenticated()
         });
 
     });

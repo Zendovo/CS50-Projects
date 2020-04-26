@@ -5,13 +5,13 @@ const {pool} = require('../lib/Users');
 
 const router = express.Router();
 
-router.get('/:id', ensureAuthenticated, (req, res) => {
+router.get('/:id([0-9])', ensureAuthenticated, (req, res) => {
 
     var id = req.params.id;
 
     pool.query('SELECT id FROM schedules WHERE id=$1 AND user_id=$2', [id, req.user.id], (err, result) => {
 
-        if (result.rowCount > 0) {
+        if (result && result.rowCount > 0) {
         
             pool.query('SELECT friends.friend_id, users.name as friend_name, users.email FROM friends INNER JOIN users ON users.id = friends.friend_id WHERE friends.user_id=$1;', [req.user.id], (err, result1) => {
 
@@ -19,7 +19,8 @@ router.get('/:id', ensureAuthenticated, (req, res) => {
                 
                 res.render('plan', {
                     friends,
-                    id
+                    id,
+                    loggedIn: req.isAuthenticated()
                 })
             })
 
@@ -33,7 +34,7 @@ router.get('/:id', ensureAuthenticated, (req, res) => {
 
 });
 
-router.post('/:id/sch', ensureAuthenticated, async (req, res) => {
+router.post('/:id([0-9])/sch', ensureAuthenticated, async (req, res) => {
 
     var idMatch = await pool.query('SELECT count(*) FROM schedules WHERE id=$1 AND user_id=$2', [req.params.id, req.user.id]);
 
@@ -54,7 +55,8 @@ router.post('/:id/sch', ensureAuthenticated, async (req, res) => {
         res.render('plan_selectSch', {
             friends,
             id: req.params.id,
-            peopleCount: friends.length
+            peopleCount: friends.length,
+            loggedIn: req.isAuthenticated()
         })
     })
 
@@ -89,14 +91,17 @@ router.post('/:id/out', ensureAuthenticated, async (req, res) => {
     res.render('output', {
         schedule: JSON.stringify(obj.schedule),
         freeSlots: obj.freeSlots,
-        duration
+        duration,
+        loggedIn: req.isAuthenticated()
     })    
 
 });
 
 router.get('/codes', (req, res) => {
 
-    res.render('codes')
+    res.render('codes', {
+        loggedIn: req.isAuthenticated()
+    });
 
 });
 
@@ -130,7 +135,8 @@ router.post('/codes', (req, res) => {
     res.render('output', {
         schedule: JSON.stringify(obj.schedule),
         freeSlots: obj.freeSlots,
-        duration
+        duration,
+        loggedIn: req.isAuthenticated()
     })
 
 });
