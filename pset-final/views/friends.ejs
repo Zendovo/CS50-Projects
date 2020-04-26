@@ -1,6 +1,8 @@
 <link rel="stylesheet" href="/css/friends.css">
 
-<%- include ("./partials/messages") %>
+<div class="w-75">
+    <%- include ("./partials/messages") %>
+</div>
 <h1 class="mt-5 text-center display-4">Friends</h1>
 
 <div class="toasts" style="position: absolute; top: 120px; right: 10px;">
@@ -44,8 +46,16 @@
         <div class="mt-5 wrapper">
         <% friends.forEach((friend, index) => { %>
             <div class="box">
-                <h4><%= friend.name %></h4>
-                <h6 style="color: #333333;"><%= friend.email %></h6>
+                <div class="row">
+                    <div class="col-8">
+                        <h4><%= friend.name %></h4>
+                        <h6 style="color: #333333;"><%= friend.email %></h6>
+                    </div>
+                    <form class="col-4 text-right" method="POST" action="/friends/remove">
+                        <input type="text" name="friendId" value="<%= friend.friend_id %>" hidden>
+                        <button class="btn btn-primary" type="submit" style="padding: 5px 13px; border-radius: 50%;">x</button>
+                    </form>
+                </div>
             </div>
         <% }) %>
         </div>

@@ -105,6 +105,23 @@ router.post('/sendrequest', ensureAuthenticated, (req, res) => {
 
 })
 
+router.post('/remove', (req, res) => {
+
+    pool.query('DELETE FROM friends WHERE user_id=$1 AND friend_id=$2 OR user_id=$2 AND friend_id=$1', [req.user.id, req.body.friendId], (err, result) => {
+
+        // Log error
+
+        if (err || result.rowCount !== 2) {
+            req.flash('error_msg', 'An error occurred.')
+            return res.redirect('/friends');
+        };
+
+        req.flash('success_msg', 'Removed friend');
+        return res.redirect('/friends');
+    });
+
+});
+
 router.post('/acceptrequest', ensureAuthenticated, (req, res) => {
 
     pool.query('SELECT count(*) FROM friend_requests WHERE sender_id=$1 AND receiver_id=$2', [req.body.sender, req.user.id], (err, result) => {
@@ -121,9 +138,11 @@ router.post('/acceptrequest', ensureAuthenticated, (req, res) => {
 
 });
 
-router.post('/deleterequest', ensureAuthenticated, (req, res) => {
+router.post('/deleterequest', ensureAuthenticated, async (req, res) => {
 
-    var result = deleteRequest(req.body.sender, req.user.id);
+    var result = await deleteRequest(req.body.sender, req.user.id);
+
+    console.log(result)
 
     if (result === undefined) {
         req.flash('error_msg', 'Some error occurred.');
@@ -157,14 +176,10 @@ function addFriend(user1, user2) {
     
 }
 
-function deleteRequest(user1, user2) {
+async function deleteRequest(user1, user2) {
 
-    pool.query('DELETE FROM friend_requests WHERE (sender_id=$1 AND receiver_id=$2) OR (sender_id=$2 AND receiver_id=$1)', [user1, user2], (err, result) => {
-
-        // if (err) throw err;
-
-        return result;
-    })
+    var result = await pool.query('DELETE FROM friend_requests WHERE (sender_id=$1 AND receiver_id=$2) OR (sender_id=$2 AND receiver_id=$1)', [user1, user2])
+    return result;
     
 }
 
