@@ -52,7 +52,7 @@
             </form>
         <% } else { %>
             <form class="mt-5" style="text-align: center;">
-                <h7>Your Schedule Code! (Copy it or Add it to your account)</h7>
+                <h7>Your Schedule Code! (Save it for use)</h7>
                 <input type="text" style="text-align: center;" class="form-control" id="schedule" name="schedule" disabled>
             </form>
         <% } %>
@@ -370,11 +370,15 @@
                 percentages.push(((length / totalTime) * 100))
             });
 
-            var div = $('<div>', {class: 'progress w-75'}).css('margin', 'auto')
+            var div = $('<div>', {class: 'progress w-100'}).css('margin', 'auto')
+            
+            var startToBound = (diffBetweenTimes(bounds[0], '00:00') / totalTime) * 100
+            div.append(`<div class="progress-bar progress-bar-striped progress-bar-lightgray" role="progressbar" style="width: ${startToBound}%"></div>`)
             
             percentages.forEach((per, index) => {
                 
                 if (index % 2 === 0) {
+
                     if (index === 0) {
 
                         var meetingEnd = bounds[0];
@@ -396,13 +400,31 @@
                     div.append(`<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: ${per}%" data-toggle="tooltip" title="${text}" aria-valuemin="0" aria-valuemax="100"></div>`)
                 } else {
                     var text = meetings[Math.floor(index / 2)][0] + ' - ' + meetings[Math.floor(index / 2)][1]
-                    var altColor = (index % 4 === 1) ? 'bg-danger' : 'progress-bar-orange'
+                    var altColor = (index % 4 === 1) ? 'progress-bar-gray' : 'progress-bar-gray2'
                     div.append(`<div class="progress-bar progress-bar-striped ${altColor}" role="progressbar" style="width: ${per}%" data-toggle="tooltip" title="${text}" aria-valuemin="0" aria-valuemax="100"></div>`)
                 }
                 
             })
+
+            var boundToEnd = (diffBetweenTimes(bounds[1], '24:00') / totalTime) * 100
+            div.append(`<div class="progress-bar progress-bar-striped progress-bar-lightgray" role="progressbar" style="width: ${boundToEnd}%"></div>`)
             
-            $('.schedule-bar').html(div)
+            var timestamp = $(`<div class="row justify-content-between text-center">
+                                <div class="col">0</div>
+                                <div class="col">2</div>
+                                <div class="col">4</div>
+                                <div class="col">6</div>
+                                <div class="col">8</div>
+                                <div class="col">10</div>
+                                <div class="col">12</div>
+                                <div class="col">14</div>
+                                <div class="col">16</div>
+                                <div class="col">18</div>
+                                <div class="col">20</div>
+                                <div class="col">22</div>
+                                <div class="col">24</div>
+                            </div>`)            
+            $('.schedule-bar').html(timestamp.add(div))
             $('[data-toggle="tooltip"]').tooltip(); 
 
         }
