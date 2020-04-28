@@ -51,9 +51,11 @@ app.use((req, res, next) => {
 app.use('/', require('./routes/index'));
 app.use('/', require('./routes/users'));
 app.use('/dashboard', require('./routes/dashboard'));
+app.use('/profile', require('./routes/profile'));
 app.use('/schedule', require('./routes/schedule'));
 app.use('/friends', require('./routes/friends'));
 app.use('/plan', require('./routes/plan'));
+app.use('/timezones', require('./routes/timezones'));
 
 
 const PORT = process.env.PORT || 5000;
