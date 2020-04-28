@@ -1,6 +1,7 @@
 const scheduler = require('./scheduler');
+const axios = require('axios');
 
-function getAvailTimes(schedules, duration) {
+async function getAvailTimes(schedules, duration) {
 
     /* 
         Sample Input 
@@ -24,26 +25,32 @@ function getAvailTimes(schedules, duration) {
 
         var data = []
 
-        schedules.forEach(schedule => {
+        schedules.forEach(async (schedule) => {
 
-            schedule = (schedule)
+            var sch = (schedule.sch)
 
-            var bounds = schedule[0]
-            var meetings = schedule[1]
+            var bounds = sch[0]
+            var meetings = sch[1]
+
+            var req = await axios.get('http://worldtimeapi.org/api/timezone/' + schedule.tz);
+            var tz = req.data.utc_offset;
 
             data.push({
                 bounds,
-                meetings
+                meetings,
+                timezone: tz
             })
             
         });
         
         var returnedData = data;
+        var tzReq = await axios.get('http://worldtimeapi.org/api/timezone/' + schedules[0].tz)
+        var timezone = tzReq.data.utc_offset
         var dataLength = 0;
         
         while (dataLength !== 1) {
             
-            returnedData = recursiveFunc(returnedData);
+            returnedData = recursiveFunc(returnedData, timezone);
 
             dataLength = returnedData.length;
             
@@ -68,9 +75,11 @@ function getAvailTimes(schedules, duration) {
 
 }
 
-function recursiveFunc(data) {
+function recursiveFunc(data, timezone) {
 
     try {
+        
+        console.log(data)
 
         var len = data.length;
 
@@ -78,8 +87,21 @@ function recursiveFunc(data) {
 
         for (let i = 0; i < len; i += 2) {
             
-            sch = data[i].meetings;
-            bounds = data[i].bounds;
+            var sch = data[i].meetings;
+            var bounds = data[i].bounds;
+            console.log(bounds, sch)
+
+            var tzOffset = timezoneDiff(timezone, data[i].timezone);
+            // console.log(tzOffset)
+            // console.log(timezone, data[i].timezone)
+
+            bounds = [changeTimezone(bounds[0], tzOffset), changeTimezone(bounds[1], tzOffset)]
+
+            sch.forEach((meeting, index) => {
+                sch[index] = [changeTimezone(meeting[0], tzOffset), changeTimezone(meeting[1], tzOffset)]
+            });
+
+            console.log(bounds, sch)
 
             if (len % 3 === 0 && i === len - 1) {
                 newData.push({
@@ -89,8 +111,21 @@ function recursiveFunc(data) {
                 continue;
             }
             
-            schNext = data[i+1].meetings;
-            boundsNext = data[i+1].bounds;
+            var schNext = data[i+1].meetings;
+            var boundsNext = data[i+1].bounds;
+            console.log(boundsNext, schNext)
+
+            var tzOffsetNext = timezoneDiff(timezone, data[i+1].timezone);
+            // console.log(tzOffsetNext)
+            // console.log(timezone, data[i+1].timezone)
+
+            boundsNext = [changeTimezone(boundsNext[0], tzOffsetNext), changeTimezone(boundsNext[1], tzOffsetNext)]
+
+            schNext.forEach((meeting, index) => {
+                schNext[index] = [changeTimezone(meeting[0], tzOffsetNext), changeTimezone(meeting[1], tzOffsetNext)]
+            });
+
+            console.log(boundsNext, schNext)
 
             var mergedBounds = scheduler.mergeBounds(bounds, boundsNext);
             var mergedSch = scheduler.mergeSchedules(mergedBounds, sch, schNext);
@@ -107,6 +142,34 @@ function recursiveFunc(data) {
         throw error;
     }
     
+}
+
+function timezoneDiff(tz1, tz2) {
+
+    var dir1 = parseInt(tz1[0] + 1)
+    var dir2 = parseInt(tz2[0] + 1)
+    
+    var [h1, m1] = tz1.slice(1).split(':');
+    var [h2, m2] = tz2.slice(1).split(':');
+
+    tz1 = dir1 * (parseInt(h1) * 60 + parseInt(m1));
+    tz2 = dir2 * (parseInt(h2) * 60 + parseInt(m2));
+    
+    return tz1 - tz2
+
+}
+
+function changeTimezone(time, tzOffset) {
+    
+    var [h, m] = time.split(':');
+    time = parseInt(h) * 60 + parseInt(m);
+
+    var newTime = time + tzOffset;
+
+    var [newH, newM] = [Math.floor(newTime / 60), newTime % 60]
+
+    return newH + ':' + (newM < 10 ? '0' + newM : newM);
+
 }
 
 module.exports = getAvailTimes

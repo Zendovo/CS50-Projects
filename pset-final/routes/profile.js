@@ -33,7 +33,9 @@ router.post('/edit', ensureAuthenticated, (req, res) => {
 
     var timezone = req.body.timezone;
 
-    pool.query('UPDATE users SET timezone = $1 WHERE id=$2', [timezone, 'asd'], (err, result) => {
+    pool.query('UPDATE users SET timezone = $1 WHERE id=$2', [timezone, req.user.id], (err, result) => {
+
+        console.log(err, result)
 
         if (err) {
             req.flash('error_msg', 'An error occurred.')

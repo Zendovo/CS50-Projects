@@ -145,11 +145,12 @@
         <div class="mt-2 bg-secondary" style="min-height: 100px; padding: 10px 15px;">
             <h4 class="mt-2"><%= friend.items[0].friend_name %></h4>
             <p class="text-muted"><%= friend.items[0].email %></p>
+            <p class="text-muted"><%= friend.items[0].timezone %></p>
             <select class="select-multiple w-50" placeholder="Select Schedule" name="<%= index %>">
                 <option></option>
         
                 <% friend.items.forEach((item, itemIndex) => { %>
-                    <option title="<%= friend.friend_id %>" value="<%= item.schedule %>">
+                    <option title="<%= friend.friend_id %>" value="<%= item.schedule %>-<%= item.timezone %>">
                         <% if (!item.schedule_name) { %>
                             Schedule #<%= itemIndex + 1 %>
                         <% } else { %>
@@ -185,6 +186,6 @@
     $('.select-multiple').on('select2:select', function (e) {
         var data = e.params.data;
         // console.log(data.id)
-        progressBar(data.id, '.bar-' + data.title)
+        progressBar(data.id.split('-')[0], '.bar-' + data.title)
     });
 </script>

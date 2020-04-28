@@ -5,7 +5,7 @@ const {pool} = require('../lib/Users');
 
 const router = express.Router();
 
-router.get('/:id([0-9])', ensureAuthenticated, (req, res) => {
+router.get('/:id', ensureAuthenticated, (req, res) => {
 
     var id = req.params.id;
 
@@ -34,16 +34,20 @@ router.get('/:id([0-9])', ensureAuthenticated, (req, res) => {
 
 });
 
-router.post('/:id([0-9])/sch', ensureAuthenticated, async (req, res) => {
+router.post('/:id/sch', ensureAuthenticated, async (req, res) => {
+
+    if (!req.body.participants) {
+        return res.redirect('/plan/11')
+    }
 
     var idMatch = await pool.query('SELECT count(*) FROM schedules WHERE id=$1 AND user_id=$2', [req.params.id, req.user.id]);
 
-    if (idMatch > 0) {
+    if (!idMatch || idMatch.rowCount === 0) {
         req.flash('error_msg', 'An error occurred.');
         return redirect('/dashboard');
     }
 
-    pool.query('SELECT schedules.id, friends.friend_id, users.name as friend_name, users.email, schedules.schedule, schedules.name AS schedule_name FROM schedules INNER JOIN friends ON schedules.user_id = friends.friend_id INNER JOIN users ON users.id = friends.friend_id WHERE friends.user_id=$1;', [req.user.id], (err, result1) => {
+    pool.query('SELECT schedules.id, friends.friend_id, users.name as friend_name, users.email, users.timezone, schedules.schedule, schedules.name AS schedule_name FROM schedules INNER JOIN friends ON schedules.user_id = friends.friend_id INNER JOIN users ON users.id = friends.friend_id WHERE friends.user_id=$1;', [req.user.id], (err, result1) => {
 
         var friends = groupBy('friend_id', result1.rows)
         var friends = friends.filter(friend => {
@@ -68,21 +72,35 @@ router.post('/:id/out', ensureAuthenticated, async (req, res) => {
     var duration = req.body.duration;
     var peopleCount = parseInt(req.body.peopleCount);
 
+    var user_sch = await pool.query('SELECT schedule, timezone FROM schedules INNER JOIN users ON schedules.user_id=users.id WHERE schedules.id=$1 AND schedules.user_id=$2', [req.params.id, req.user.id])
+    console.log(user_sch.rows)
+    schedules.push({
+        sch: JSON.parse(user_sch.rows[0].schedule),
+        tz: user_sch.rows[0].timezone
+    });
+
     for (let i = 0; i < peopleCount; i++) {
         
         try {
-            var sch = JSON.parse(req.body[i])
+            var body = req.body[i].split('-')
+            if (body.length !== 2) throw 'bad code'
+            var sch = JSON.parse(body[0])
+            var tz = body[1]
         } catch (error) {
             req.flash('error_msg', 'Invalid Code.')
             res.redirect('/dashboard')
         }
         
-        schedules.push(sch);
+        schedules.push({
+            sch,
+            tz
+        });
     }
     
-    var obj = getAvailTime(schedules, duration)
+    var obj = await getAvailTime(schedules, duration)
 
     if (obj.msg === 'ERROR') {
+        console.error(obj.error)
         req.flash('error_msg', 'Invalid Code.')
         res.redirect('/dashboard')
         return
