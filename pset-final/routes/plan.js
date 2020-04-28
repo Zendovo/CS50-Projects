@@ -5,7 +5,7 @@ const {pool} = require('../lib/Users');
 
 const router = express.Router();
 
-router.get('/:id', ensureAuthenticated, (req, res) => {
+router.get('/:id(\\d+)', ensureAuthenticated, (req, res) => {
 
     var id = req.params.id;
 
@@ -34,7 +34,7 @@ router.get('/:id', ensureAuthenticated, (req, res) => {
 
 });
 
-router.post('/:id/sch', ensureAuthenticated, async (req, res) => {
+router.post('/:id(\\d+)/sch', ensureAuthenticated, async (req, res) => {
 
     if (!req.body.participants) {
         return res.redirect('/plan/11')
@@ -66,14 +66,13 @@ router.post('/:id/sch', ensureAuthenticated, async (req, res) => {
 
 });
 
-router.post('/:id/out', ensureAuthenticated, async (req, res) => {
+router.post('/:id(\\d+)/out', ensureAuthenticated, async (req, res) => {
 
     var schedules = [];
     var duration = req.body.duration;
     var peopleCount = parseInt(req.body.peopleCount);
 
     var user_sch = await pool.query('SELECT schedule, timezone FROM schedules INNER JOIN users ON schedules.user_id=users.id WHERE schedules.id=$1 AND schedules.user_id=$2', [req.params.id, req.user.id])
-    console.log(user_sch.rows)
     schedules.push({
         sch: JSON.parse(user_sch.rows[0].schedule),
         tz: user_sch.rows[0].timezone
@@ -123,7 +122,7 @@ router.get('/codes', (req, res) => {
 
 });
 
-router.post('/codes', (req, res) => {
+router.post('/codes', async (req, res) => {
 
     var count = req.body.count;
 
@@ -133,16 +132,23 @@ router.post('/codes', (req, res) => {
     for (let i = 0; i < count; i++) {
         
         try {
-            var sch = JSON.parse(req.body['code_' + (i+1)])
+            var body = req.body['code_' + (i+1)].split('-')
+            if (body.length !== 2) throw 'bad code'
+            var sch = JSON.parse(body[0])
+            var tz = body[1]
         } catch (error) {
+            console.log(error)
             req.flash('error_msg', 'Invalid Code.')
-            res.redirect('/plan/codes')
+            return res.redirect('/plan/codes')
         }
         
-        schedules.push(sch);
+        schedules.push({
+            sch,
+            tz
+        });
     }
     
-    var obj = getAvailTime(schedules, duration)
+    var obj = await getAvailTime(schedules, duration)
 
     if (obj.msg === 'ERROR') {
         req.flash('error_msg', 'Invalid Code.')
