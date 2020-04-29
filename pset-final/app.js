@@ -13,7 +13,11 @@ const app = express();
 // Passport config
 require('./config/passport')(passport);
 
+// Static Files (css, js, images)
 app.use(express.static(path.join(__dirname, '/public')));
+
+// Proxy
+app.set('trust proxy', true)
 
 // Table creation
 createTable();

@@ -41,12 +41,12 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
 
-    const { name, email, password, password2 } = req.body;
+    const { name, email, password, password2, timezone } = req.body;
 
     let errors = []
 
     // Check required fields
-    if (!name || !email || !password || !password2 ) {
+    if (!name || !email || !password || !password2 || !timezone) {
         errors.push({ msg: 'Please fill in all fields! '})
     }
 
@@ -78,7 +78,7 @@ router.post('/register', (req, res) => {
 
                 } else {
                     let uuid = uuidv4()
-                    let values = [uuid, name, email]
+                    let values = [uuid, name, email, timezone]
 
                     // generate salt and hash the password
                     bcrypt.genSalt(10, (err, salt) => {
@@ -88,7 +88,7 @@ router.post('/register', (req, res) => {
                             values.push(hash)
 
                             // Add user to the database
-                            pool.query('INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4)', values, (err, result) => {
+                            pool.query('INSERT INTO users (id, name, email, timezone, password) VALUES ($1, $2, $3, $4, $5)', values, (err, result) => {
                                 if (err) throw err;
 
                                 console.log(result)

@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css">
 
 <h1 class="text-center mt-5 display-3">Meeting Planner</h1>
+<link rel="stylesheet" href="/css/select2-lux.css">
 
 <div class="jumbotron mt-5 w-75" style="margin: auto;">
 
@@ -11,6 +12,7 @@
     <form class="" method="POST" action="/plan/<%= id %>/sch">
         
         <select class="select-multiple w-50" name="participants" multiple="multiple">
+            <option></option>
     
             <% friends.forEach((friend, index) => { %>
                 <option value="<%= friend.friend_id %>"><%= friend.items[0].friend_name %><br><span class="text-muted">asdsda</span></option>
@@ -26,6 +28,8 @@
 
 <script>
     $(document).ready(function() {
-        $('.select-multiple').select2();
+        $('.select-multiple').select2({
+            placeholder: 'Select people to add to meeting'
+        });
     });
 </script>

@@ -18,6 +18,7 @@ function createTable() {
         name VARCHAR(128) NOT NULL,
         email VARCHAR(128) NOT NULL,
         password VARCHAR(60) NOT NULL,
+        timezone VARCHAR(128) NOT NULL DEFAULT 'Europe/London',
         time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT users_pkey PRIMARY KEY(id) )
         WITH (oids = false);`);
