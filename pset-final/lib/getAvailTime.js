@@ -25,21 +25,27 @@ async function getAvailTimes(schedules, duration) {
 
         var data = []
 
-        schedules.forEach(async (schedule) => {
+        schedules.forEach((schedule) => {
 
             var sch = (schedule.sch)
 
             var bounds = sch[0]
             var meetings = sch[1]
 
-            var req = await axios.get('http://worldtimeapi.org/api/timezone/' + schedule.tz);
-            var tz = req.data.utc_offset;
-
-            data.push({
-                bounds,
-                meetings,
-                timezone: tz
-            })
+            axios.get('http://worldtimeapi.org/api/timezone/' + schedule.tz)
+                .then(response => {
+                    var tz = response.data.utc_offset;
+        
+                    data.push({
+                        bounds,
+                        meetings,
+                        timezone: tz
+                    })
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
             
         });
         

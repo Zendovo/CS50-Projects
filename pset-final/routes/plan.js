@@ -73,6 +73,7 @@ router.post('/:id(\\d+)/out', ensureAuthenticated, async (req, res) => {
     var peopleCount = parseInt(req.body.peopleCount);
 
     var user_sch = await pool.query('SELECT schedule, timezone FROM schedules INNER JOIN users ON schedules.user_id=users.id WHERE schedules.id=$1 AND schedules.user_id=$2', [req.params.id, req.user.id])
+    console.log(user_sch)
     schedules.push({
         sch: JSON.parse(user_sch.rows[0].schedule),
         tz: user_sch.rows[0].timezone
@@ -95,6 +96,8 @@ router.post('/:id(\\d+)/out', ensureAuthenticated, async (req, res) => {
             tz
         });
     }
+
+    console.log(schedules)
     
     var obj = await getAvailTime(schedules, duration)
 
