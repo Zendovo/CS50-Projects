@@ -6,6 +6,27 @@
     <%- include ("./partials/messages") %>
 </div>
 
+<div class="card text-white bg-primary mt-5 mb-3 w-75" style="margin: auto;">
+    <div class="card-header"><h4 class="card-title">How to use</h4></div>
+    <div class="card-body">
+        
+        <p class="card-text">You have to enter the schedule code in each of these boxes</p>
+        <p class="card-text">
+            <i>For example</i>
+        </p>
+        <p class="card-text">
+            You can get your schedule code from <a href="/schedule/create" style="color: #b9e5ff;">here</a> or copy the code from your pre-existing schedule.<br>
+            After each code you must attach the timezone like so: <br>
+        </p>
+        <p class="font-weight-bold" style="background-color: #474747; padding: 12px 24px;">[Schedule Code]-Europe/London</p>
+        <p class="font-weight-bold" style="background-color: #474747; padding: 12px 24px;">[Schedule Code]-Asia/Kolkata</p>
+
+        <p class="card-text">
+            You can add more fields as required and then finally enter the meeting duration (in minutes) and press Calculate
+        </p>
+    </div>
+</div>
+
 <form class="mt-5 text-center w-75" style="margin: auto;" action="/plan/codes" method="POST">
 
     <div class="form-group">

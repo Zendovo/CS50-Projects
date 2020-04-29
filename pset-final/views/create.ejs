@@ -10,7 +10,20 @@
 
         <h3 class="mt-4 text-center">Working Hours</h3>
         <p class="lead text-center">The hours during which a meeting should be scheduled</p>
-        <hr class="mb-5" width="100%">
+        <hr class="mb-3" width="100%">
+
+        <div class="card text-white bg-primary mb-3 w-75" style="margin: auto;">
+            <div class="card-header mb-0"><h4 class="card-title">How to use</h4></div>
+            <div class="card-body">
+                <p class="card-text">Here, you set the time range where you want to schedule your meetings.</p>
+                <p class="card-text">
+                    <i>For example</i>
+                </p>
+                <p class="card-text">
+                    If you work from 9AM to 5PM, then you adjust the first handle to 9AM and the second to 5PM. Then you can add your meetings
+                </p>
+            </div>
+        </div>
 
         <div id="time-range">
             <p>Schedule Bounds: <span class="slider-time">9:00 AM</span> - <span class="slider-time2">5:00 PM</span></p>
@@ -26,7 +39,26 @@
 
         <h3 class="mt-4 text-center">Meetings</h3>
         <p class="lead text-center">Meetings to be added in chronological order</h7>
-        <hr class="mb-5" width="100%">
+        <hr class="mb-3" width="100%">
+
+        <div class="card text-white bg-primary mb-3 w-75" style="margin: auto;">
+            <div class="card-header mb-0"><h4 class="card-title">How to use</h4></div>
+            <div class="card-body">
+                <p class="card-text">Here, you add your meetings.</p>
+                <p class="font-weight-bold">They must be added in chronological order!</p>
+                <p class="card-text">
+                    <i>For example</i>
+                </p>
+                <p class="card-text">
+                    If you have a meeting from 10AM to 11AM and 3:30PM to 4:45PM, you must add your first meeting by clicking on the + button.
+                </p>
+                <p class="card-text">
+                    Then when you click the + button the slider will adjust to the end of your last meeting and then you can adjust the handles to 3:30PM and 4:45PM respectively.
+                </p>
+
+                <p class="card-text">NOTE: You cannot change your previous meeting without removing the later ones.</p>
+            </div>
+        </div>
 
         <input type="number" id="meetings_count" value="0" hidden>
 
