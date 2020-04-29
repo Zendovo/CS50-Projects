@@ -15,7 +15,7 @@
             <option></option>
     
             <% friends.forEach((friend, index) => { %>
-                <option value="<%= friend.friend_id %>"><%= friend.items[0].friend_name %><br><span class="text-muted">asdsda</span></option>
+                <option value="<%= friend.friend_id %>"><%= friend.items[0].friend_name %> (<%= friend.items[0].email %>)</option>
             <% }) %>
     
         </select><br>
