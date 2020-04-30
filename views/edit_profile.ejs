@@ -1,0 +1,58 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.full.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css">
+
+<link rel="stylesheet" href="/css/select2-lux.css">
+
+<h1 class="mt-5 text-center">Edit Profile</h1>
+
+<div class="mt-5 jumbotron w-75 pb-4" style="margin: auto;">
+    <div class="row">
+        <div class="col-4">
+            <label for="timezone">Timezone</label>
+        </div>
+        <div class="col-8">
+            <select class="custom-select select-continent w-100">
+                <option></option>
+                <option value="Africa">Africa</option>
+                <option value="America">America</option>
+                <option value="Antarctica">Antarctica</option>
+                <option value="Asia">Asia</option>
+                <option value="Atlantic">Atlantic</option>
+                <option value="Australia">Australia</option>
+                <option value="Europe">Europe</option>
+                <option value="Indian">Indian</option>
+                <option value="Pacific">Pacific</option>
+            </select>
+        </div>
+    </div>
+    <form action="/profile/edit" method="POST">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-8 mt-2 timezone">
+                
+            </div>
+        </div>
+        <div class="text-right mt-3">
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.select-continent').select2({
+            placeholder: "Select your region"
+        });
+    });
+
+    $('.select-continent').on('select2:select', function (e) {
+        var region = e.params.data.id.toLowerCase();
+        
+        $.get('/timezones/' + region, {}, result => {
+            $('.timezone').html(result)
+            $('.select-' + region).select2();
+        })
+        
+        
+    });
+</script>

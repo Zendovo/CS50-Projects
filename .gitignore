@@ -1,1 +1,2 @@
-pset-final/.env
+.flask/
+node_modules/

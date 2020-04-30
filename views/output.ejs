@@ -1,0 +1,162 @@
+<link rel="stylesheet" href="/css/output.css">
+
+<script>
+
+    function progressBar(schedule, container) {
+
+        console.log(schedule)
+
+        var schedule = JSON.parse(schedule)
+        var bounds = schedule[0]
+        var meetings = schedule[1]
+
+        // var lengths = [bound2first, firstMeeting, first2second, secondMeeting, second2third, thirdMeeting, last2bound]
+        var lengths = []
+        var percentages = []
+
+        lengths.push(diffBetweenTimes(bounds[0], meetings[0][0]))
+
+        meetings.forEach((meeting, index) => {
+
+            lengths.push(diffBetweenTimes(meeting[0], meeting[1]))
+
+            if (index === meetings.length - 1) {
+                return;
+            }
+
+            lengths.push(diffBetweenTimes(meeting[1], meetings[index + 1][0]))
+            
+        });
+
+        lengths.push(diffBetweenTimes(bounds[1], meetings[meetings.length - 1][1]))
+
+        console.log(lengths)
+
+        var totalTime = 1440
+        lengths.forEach(length => {
+            percentages.push(((length / totalTime) * 100))
+        });
+
+        console.log(percentages)
+
+        var div = $('<div>', {class: 'progress w-100'}).css('margin', 'auto')
+
+        var startToBound = (diffBetweenTimes(bounds[0], '00:00') / totalTime) * 100
+        div.append(`<div class="progress-bar progress-bar-striped progress-bar-lightgray" role="progressbar" style="width: ${startToBound}%"></div>`)
+        
+        percentages.forEach((per, index) => {
+            
+            if (index % 2 === 0) {
+
+                if (index === 0) {
+
+                    var meetingEnd = bounds[0];
+                    var next_meetingStart = meetings[0][0]
+
+                } else if (index < percentages.length - 1) {
+
+                    var meetingEnd = meetings[index / 2 - 1][1];
+                    var next_meetingStart = meetings[index / 2][0];
+
+                } else if (index === percentages.length - 1) {
+
+                    var meetingEnd = meetings[index / 2 - 1][1];
+                    var next_meetingStart = bounds[1];
+
+                }
+                console.log(meetingEnd, next_meetingStart)
+
+                var text = meetingEnd + ' - ' + next_meetingStart;
+                var color = (diffBetweenTimes(meetingEnd, next_meetingStart) >= <%- duration %>) ? 'bg-success' : 'progress-bar-gray'
+                div.append(`<div class="progress-bar progress-bar-striped ${color}" role="progressbar" style="width: ${per}%" data-toggle="tooltip" title="${text}" aria-valuemin="0" aria-valuemax="100"></div>`)
+            } else {
+                var altColor = 'progress-bar-gray';
+                var text = meetings[Math.floor(index / 2)][0] + ' - ' + meetings[Math.floor(index / 2)][1];
+                div.append(`<div class="progress-bar progress-bar-striped ${altColor}" role="progressbar" style="width: ${per}%" data-toggle="tooltip" title="${text}" aria-valuemin="0" aria-valuemax="100"></div>`)
+            }
+            
+        })
+
+        var boundToEnd = (diffBetweenTimes(bounds[1], '24:00') / totalTime) * 100
+        div.append(`<div class="progress-bar progress-bar-striped progress-bar-lightgray" role="progressbar" style="width: ${boundToEnd}%"></div>`)
+        
+        var timestamp = $(`<div class="row justify-content-between text-center">
+                            <div class="col">0</div>
+                            <div class="col">2</div>
+                            <div class="col">4</div>
+                            <div class="col">6</div>
+                            <div class="col">8</div>
+                            <div class="col">10</div>
+                            <div class="col">12</div>
+                            <div class="col">14</div>
+                            <div class="col">16</div>
+                            <div class="col">18</div>
+                            <div class="col">20</div>
+                            <div class="col">22</div>
+                            <div class="col">24</div>
+                        </div>`)
+        $(container).html(timestamp.add(div))
+        $('[data-toggle="tooltip"]').tooltip(); 
+
+    }
+
+    function compareTimes(t1, t2) {
+
+        // Split the hour and the minute
+        var [h1, m1] = t1.split(':');
+        var [h2, m2] = t2.split(':');
+
+        // Determine the total number of minutes
+        // To make performing calculations easy
+        t1 = parseInt(h1) * 60 + parseInt(m1);
+        t2 = parseInt(h2) * 60 + parseInt(m2);
+
+        if (t1 < t2) {
+            return - 1;
+        } else if (t1 > t2) {
+            return 1;            
+        } else {
+            return 0;
+        }
+    }
+
+    function diffBetweenTimes(t1, t2) {
+
+        // Split the hour and the minute
+        var [h1, m1] = t1.split(':');
+        var [h2, m2] = t2.split(':');
+
+        // Determine the total number of minutes
+        // To make performing calculations easy
+        t1 = parseInt(h1) * 60 + parseInt(m1);
+        t2 = parseInt(h2) * 60 + parseInt(m2);
+
+        return Math.abs(t1 - t2);
+
+    }
+
+</script>
+
+<h1 class="text-center">Your free time slots</h1>
+
+<div class="jumbotron w-75 mt-4" style="margin: auto;">
+
+    <p class="text-muted">The green parts are your time slots</p>
+
+    <div class="bar-container mt-5">
+        
+    </div>
+
+    <ul class="list-group mt-5 w-50" style="margin: auto;">
+        <% freeSlots.forEach((freeSlot, index) => { %>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <%= freeSlot[0] %> - <%= freeSlot[1] %>
+            </li>
+        <% }) %>
+    </ul>
+
+    <script>
+        progressBar('<%- schedule %>', '.bar-container')
+    </script>
+
+</div>

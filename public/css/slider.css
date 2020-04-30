@@ -1,0 +1,25 @@
+.ui-slider .ui-slider-range {
+    /* border-top-color: rgb(27, 149, 27);
+    border-right-color: rgb(27, 149, 27);
+    border-bottom-color: rgb(27, 149, 27);
+    border-left-color: rgb(27, 149, 27); */
+    border-color: rgb(56, 54, 54);
+    box-shadow: rgb(48, 51, 54) 0px 1px 0px inset;
+    background-color: rgb(43, 43, 43);
+    /* background-image: -webkit-linear-gradient(top, rgb(6, 167, 154), rgb(6, 136, 82)); */
+}
+
+.ui-slider .ui-slider-handle {
+    background-image: initial;
+    background-color: rgb(26, 27, 26);
+    border-top-color: initial;
+    border-right-color: initial;
+    border-bottom-color: initial;
+    border-left-color: initial;
+}
+
+.ui-slider .ui-slider-handle::after {
+    background-image: initial;
+    background-color: rgb(190, 190, 190);
+    box-shadow: rgba(101, 141, 148, 0.7) 0px 1px 1px 1px inset, rgb(24, 26, 27) 0px 1px 0px 0px;
+}

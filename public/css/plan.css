@@ -1,0 +1,19 @@
+.progress-bar-orange {
+    background-color: orange !important;
+  }
+  
+.progress-bar-lightgray {
+  background-color: lightgray !important;
+}
+
+.progress-bar-gray {
+  background-color: gray !important;
+}
+
+.progress-bar-gray2 {
+  background-color: rgb(80, 80, 80) !important;
+}
+
+.bg-custom-container {
+  background-color: #d6d6d621;
+}
